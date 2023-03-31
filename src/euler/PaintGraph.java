@@ -6,8 +6,6 @@
 package euler;
 
 //import static java.awt.Color.red;
-import java.io.*;
-import java.net.*;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
@@ -28,7 +26,8 @@ import javax.swing.JPanel;
 
 public class PaintGraph extends JPanel
 {
- private int ny , nx , oyn , oyk , oyx , oxn , oxk , oxy , ly , lx , sw , xln, l2;
+ public int sw=0;   
+ private int ny , nx , oyn , oyk , oyx , oxn , oxk , oxy , ly , lx , xln, l2;
  private    float xng , kx , ky , hx , yg , xk;
  
         static int x, y,x_,y_,p, povtor=0;
@@ -36,23 +35,9 @@ public class PaintGraph extends JPanel
         static double x1, y1, phi=0, x2, y2,x3,y3,t,k,b,n=1000,m,R,R1,R2,R3,r,r9,k12,k13,k23,b12,b13,b23;
         static double l1,l22,l3,alpha1,alpha2,alpha3,xc,yc,xrc,yrc,xh,yh,xm,ym,Euler_k, Euler_b;
         static double dphi, da1, da2,xc00,yc00;
-        static String WikiMath="";
+        static double xc9, yc9;
 
 
-        
-        
-public static void SentParametersToServer2(String message) throws Exception 
-{   
-  Socket clientSocket = new Socket("192.168.1.30", 5000);
-  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());  
-  //sentence = message;//MessageFromMahProg.readLine();  
-  //outToServer.writeChars(message+ (355/113));  
-  outToServer.writeBytes(message);  
-  System.out.println(message);
-  clientSocket.close();    
- }        
-        
-        
  public PaintGraph()
  {
   ny = 10;// цена деления  по шкалам
@@ -172,6 +157,8 @@ public static void SentParametersToServer2(String message) throws Exception
   
  }
 
+ //@Override
+ //public void paint(int sw,Graphics g)
  public void paint(Graphics g)
  {  
 
@@ -187,13 +174,23 @@ public static void SentParametersToServer2(String message) throws Exception
      
   switch (sw)
   {   
-   case 4 :
-   funcEuler2(g);
-   break;
+   case 0:
+        {
+          InitPaintObject(g);
+          break;
+        }
+          
+   case 4:
+        { 
+          Fugure_coord(g);
+          break;
+        }
    
-   case 5 :
-   funcEuler2(g);
-   break;
+   case 5:
+       {
+          Fugure_triangle(g);
+          break;
+       }
   }
  
  }
@@ -232,17 +229,16 @@ public static void SentParametersToServer2(String message) throws Exception
             r9 = R / 2;
         }
 
-void putpixel(int x, int y, int color) // Рисование пикселя
+void putpixel(Graphics g, int x, int y, int color) // Рисование пикселя
         {
-            //g.drawLine( x-1 , y-1, x,y); 
+            g.drawLine(x-1 , y-1, x,y); 
         }         
 
  
- 
- void funcEuler2(Graphics g) 
- {
-        
-     super.paint(g);
+void InitPaintObject(Graphics g)
+{
+     
+     //super.paint(g);
      //super.repaint();
      
      
@@ -260,9 +256,9 @@ void putpixel(int x, int y, int color) // Рисование пикселя
                 
   int km = 0;
 
-           while (true)
-            {
-                super.paint(g);
+           //while (true)
+            
+                //super.paint(g);
                 //super.repaint();
                 km++;                
 
@@ -313,7 +309,8 @@ void putpixel(int x, int y, int color) // Рисование пикселя
                  
                 
 
-                double xc9 = (xc + xh) / 2, yc9 = (yc + yh) / 2;
+                xc9 = (xc + xh) / 2; 
+                yc9 = (yc + yh) / 2;
 
                 
                 Euler_k = (yc - yh) / (xc - xh);
@@ -329,12 +326,6 @@ void putpixel(int x, int y, int color) // Рисование пикселя
      g.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));     
      g.setColor(Color.magenta);    
                 
-           WikiMath="Э - центр окружности 9 точек: ["+(int)xc9+"; "+(int)yc9+"]\n";
-                   //  "М - центроид или центр тяжести - точка пересечения медиан: ["+(int)xm+"; "+(int)ym+"]\n"+
-                   //  "H - ортоцетр - точка пересечения высот: ["+(int)xh+"; "+(int)yh+"]\n"+
-                  // "O -  центр описанной окружности: ["+(int)xc+"; "+(int)yc+"]\n"+
-                  // "о - центр вписанной окружности: ["+(int)xrc+"; "+(int)yrc+"]";
-           
                 g.drawString("Э - центр окружности 9 точек: ["+(int)xc9+"; "+(int)yc9+"]", 50, 50); 
                 g.drawString("М - центроид или центр тяжести - точка пересечения медиан: ["+(int)xm+"; "+(int)ym+"]", 50, 70); 
                 g.drawString("H - ортоцетр - точка пересечения высот: ["+(int)xh+"; "+(int)yh+"]", 50, 90); //  
@@ -374,14 +365,7 @@ void putpixel(int x, int y, int color) // Рисование пикселя
                 
                 g.drawString("    сторона  треугольника l1="+(int)l1+"; ", 50, 340); //  
                 g.drawString("    сторона  треугольника l2="+(int)l2, 50, 360); //  
-                g.drawString("    сторона  треугольника l3="+(int)l3, 50, 380); // 
-                
-                //SentParametersToServer(String("    [x1,y1]=["+(int)x1+"; "+(int)y1+"]"));
-         
-                
-        
-                
-         
+                g.drawString("    сторона  треугольника l3="+(int)l3, 50, 380); //  
                 
                 g.drawString("    [x1,y1]=["+(int)x1+"; "+(int)y1+"]", 50, 420); //  
                 g.drawString("    [x2,y2]=["+(int)x2+"; "+(int)y2+"]", 50, 440); // 
@@ -412,32 +396,26 @@ void putpixel(int x, int y, int color) // Рисование пикселя
                 g.drawString("l3="+(int)l3, (int)((x1+x2)/2)-30, (int)((y1+y2)/2)); //  центр вписанной окружности 
                 
                 
-                        try{
-        SentParametersToServer2(WikiMath);
-        //SentClientParametersToServer(" Hi from Java ");
-        }
-        catch(Exception e){
-            System.out.println("Error Java to C#: "+e.toString());        
-        }
-                
-                
                 fontSize = 15;
      g.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));     
      g.setColor(Color.red);    
-
+}
+ 
+ void Fugure_coord(Graphics g) 
+ {           
+        //InitPaintObject(g);
                 while (p < n)
                 {
-
                     x = (int)((xc00-300)+(600)*m/n);
                     y = (int)(yc00-300);                    
-                    g.drawLine( x-1 , y-1, x,y); 
+                    putpixel(g, x-1 , y-1, 355113); 
                     
                     if(m%50==0)
                     {
                       for(int v=0;v<20;v++){
                           int x0 = (int)(x);
                           int y0 = (int)((y-10)+(20)*v/25);                    
-                          g.drawLine( x0-1 , y0-1, x0,y0); 
+                          putpixel(g, x0-1 , y0-1, 355113); 
                           g.drawString(""+((int)x0), (int)x, (int)(y-20)); 
                       }    
                     }
@@ -445,80 +423,19 @@ void putpixel(int x, int y, int color) // Рисование пикселя
                     
                     x = (int)((xc00-300));
                     y = (int)((yc00-300)+(600)*m/n);                    
-                    g.drawLine( x-1 , y-1, x,y); 
+                    putpixel(g, x-1 , y-1, 355113); 
                     
                     if(m%50==0)
                     {
                       for(int v=0;v<25;v++){
                           int x0 = (int)((x-10)+(20)*v/25);
                           int y0 = (int)(y);                    
-                          g.drawLine( x0-1 , y0-1, x0,y0); 
+                          putpixel(g, x0 , y0, 0); 
                           g.drawString(""+((int)y0), (int)(x-40), (int)(y)); 
                       }    
                     }
                     
-                    x = (int)(xh + (xc - xh) * m / n);
-                    y = (int)(Euler_k * (xh + (xc - xh) * m / n) + Euler_b);                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    x = (int)(x1 + (x2 - x1) * m / n);
-                    y = (int)(k12 * (x1 + (x2 - x1) * m / n) + b12);                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    x = (int)(x3 + (x2 - x3) * m / n);
-                    y = (int)(k23 * (x3 + (x2 - x3) * m / n) + b23);                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    x = (int)(x3 + (x1 - x3) * m / n);
-                    y = (int)(k13 * (x3 + (x1 - x3) * m / n) + b13);
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    //putpixel((int)(x1 + (x2 - x1) * m / n),100,blue);
-                    //putpixel((int)100,(int)(y1 + (y2 - y1) * m / n), blue);
-
-                    t = (2 * Pi) * m / n;
-                    x = (int)(xc + R * Math.cos(t));
-                    y = (int)(yc + R * Math.sin(t));
-                    g.drawLine( x-1 , y-1, x,y); 
-                    if (p % 50 == 0)
-                    {
-                        //drawPoint = new PointF(x, y);
-                        //drawString = "["+p+"]:{x=" + x + "; y=" + y + "}";
-                        //g.DrawString(drawString, drawFont, drawPointBrush, drawPoint);
-                    }
-
-
-                    t = (2 * Pi) * m / n;
-                    x = (int)(xrc + r * Math.cos(t));
-                    y = (int)(yrc + r * Math.sin(t));                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-
-                    t = (2 * Pi) * m / n;
-                    x = (int)(xc9 + r9 * Math.cos(t));
-                    y = (int)(yc9 + r9 * Math.sin(t));                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-
-                    x = (int)(xrc + 3 * Math.cos(t));
-                    y = (int)(yrc + 3* Math.sin(t));                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    x = (int)(xc + 3 * Math.cos(t));
-                    y = (int)(yc + 3 * Math.sin(t));                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    x = (int)(xh + 3 * Math.cos(t));
-                    y = (int)(yh + 3 * Math.sin(t));                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    x = (int)(xm + 3 * Math.cos(t));
-                    y = (int)(ym + 3 * Math.sin(t));                    
-                    g.drawLine( x-1 , y-1, x,y); 
-
-                    x = (int)(xc9 + 3 * Math.cos(t));
-                    y = (int)(yc9 + 3 * Math.sin(t));                    
-                    g.drawLine( x-1 , y-1, x,y); 
+                    
                     //char[] ch={'E','E'};
                     
                     
@@ -535,11 +452,130 @@ void putpixel(int x, int y, int color) // Рисование пикселя
                 p = 0;
 
                 
-        if (km > povtor) break;
+//        if (km > povtor) return;/ break;
                 //if (Console.ReadKey()='y') break;
             }
 
-        }
+        
+ void Fugure_triangle(Graphics g) 
+ {            
+        InitPaintObject(g);
+        
+                while (p < n)
+                {
+
+                    x = (int)((xc00-300)+(600)*m/n);
+                    y = (int)(yc00-300);                    
+                    putpixel(g, x-1 , y-1, 355113); 
+                    
+                    if(m%50==0)
+                    {
+                      for(int v=0;v<20;v++){
+                          int x0 = (int)(x);
+                          int y0 = (int)((y-10)+(20)*v/25);                    
+                          putpixel(g, x0-1 , y0-1, 355113); 
+                          g.drawString(""+((int)x0), (int)x, (int)(y-20)); 
+                      }    
+                    }
+                    
+                    
+                    x = (int)((xc00-300));
+                    y = (int)((yc00-300)+(600)*m/n);                    
+                    putpixel(g, x-1 , y-1, 355113); 
+                    
+                    if(m%50==0)
+                    {
+                      for(int v=0;v<25;v++){
+                          int x0 = (int)((x-10)+(20)*v/25);
+                          int y0 = (int)(y);                    
+                          putpixel(g, x0 , y0, 0); 
+                          g.drawString(""+((int)y0), (int)(x-40), (int)(y)); 
+                      }    
+                    }
+                    
+                    x = (int)(xh + (xc - xh) * m / n);
+                    y = (int)(Euler_k * (xh + (xc - xh) * m / n) + Euler_b);                    
+                    putpixel(g, x , y, 355113); 
+
+                    x = (int)(x1 + (x2 - x1) * m / n);
+                    y = (int)(k12 * (x1 + (x2 - x1) * m / n) + b12);                    
+                    putpixel(g, x , y, 355113); 
+
+                    x = (int)(x3 + (x2 - x3) * m / n);
+                    y = (int)(k23 * (x3 + (x2 - x3) * m / n) + b23);                    
+                    putpixel(g, x , y, 355113); 
+
+                    x = (int)(x3 + (x1 - x3) * m / n);
+                    y = (int)(k13 * (x3 + (x1 - x3) * m / n) + b13);
+                    putpixel(g, x-1 , y-1, 355113); 
+
+                    //putpixel((int)(x1 + (x2 - x1) * m / n),100,blue);
+                    //putpixel((int)100,(int)(y1 + (y2 - y1) * m / n), blue);
+
+                    t = (2 * Pi) * m / n;
+                    x = (int)(xc + R * Math.cos(t));
+                    y = (int)(yc + R * Math.sin(t));
+                    putpixel(g, x-1 , y-1, 355113); 
+                    if (p % 50 == 0)
+                    {
+                        //drawPoint = new PointF(x, y);
+                        //drawString = "["+p+"]:{x=" + x + "; y=" + y + "}";
+                        //g.DrawString(drawString, drawFont, drawPointBrush, drawPoint);
+                    }
+
+
+                    t = (2 * Pi) * m / n;
+                    x = (int)(xrc + r * Math.cos(t));
+                    y = (int)(yrc + r * Math.sin(t));                    
+                    putpixel(g, x-1 , y-1, 355113); 
+
+
+                    t = (2 * Pi) * m / n;
+                    x = (int)(xc9 + r9 * Math.cos(t));
+                    y = (int)(yc9 + r9 * Math.sin(t));                    
+                    putpixel(g, x-1 , y-1, 355113); 
+
+
+                    x = (int)(xrc + 3 * Math.cos(t));
+                    y = (int)(yrc + 3* Math.sin(t));                    
+                    putpixel(g, x-1 , y-1, 355113); 
+
+                    x = (int)(xc + 3 * Math.cos(t));
+                    y = (int)(yc + 3 * Math.sin(t));                    
+                    putpixel(g, x-1 , y-1, 355113); 
+
+                    x = (int)(xh + 3 * Math.cos(t));
+                    y = (int)(yh + 3 * Math.sin(t));                    
+                    putpixel(g, x-1 , y-1, 355113); 
+
+                    x = (int)(xm + 3 * Math.cos(t));
+                    y = (int)(ym + 3 * Math.sin(t));                    
+                    putpixel(g, x-1 , y-1, 355113); 
+
+                    x = (int)(xc9 + 3 * Math.cos(t));
+                    y = (int)(yc9 + 3 * Math.sin(t));                    
+                    putpixel(g, x-1 , y-1, 355113); 
+                    //char[] ch={'E','E'};
+                    
+                    
+     
+                    
+
+
+                    m++;
+                    p++;
+
+                }
+
+
+                p = 0;
+
+                
+//        if (km > povtor) return;/ break;
+                //if (Console.ReadKey()='y') break;
+            }
+
+        
   
 
 
@@ -547,10 +583,15 @@ void putpixel(int x, int y, int color) // Рисование пикселя
  
  
  // группа getXXX(), setXXX() - методов
- public int getNx() {
+ 
+
+
+
+public int getNx() {
   return nx;
  }
- public void setNx(int nx) {
+
+public void setNx(int nx) {
   this.nx = nx;
  }
  public int getNy() {
